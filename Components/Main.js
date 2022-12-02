@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import Login from "../Pages/Login";
 import Home from "../Pages/Home";
+import Profile from "../Pages/Profile";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -53,7 +54,7 @@ export default function Main() {
           })}
         >
           <Tab.Screen name={"Home"} component={Home} />
-          <Tab.Screen name={"Profile"} component={Home} />
+          <Tab.Screen name={"Profile"} component={Profile} />
         </Tab.Navigator>
       </NavigationContainer>
     </Provider>

@@ -22,12 +22,9 @@ WebBrowser.maybeCompleteAuthSession();
 //   }
 // }, [response]);
 
-export default function Login({ navigation }) {
+export default function Login() {
   const [accessToken, setAccessToken] = React.useState();
   const [userInfo, setUserInfo] = React.useState();
-
-  // //NAVIGATION
-  // const navigation = useNavigation();
 
   const dispatch = useDispatch();
 
@@ -38,6 +35,7 @@ export default function Login({ navigation }) {
     // iosClientId:
     //   "536279923900-23oa8bb9llrtm751fs9pkulbv1a8v4gp.apps.googleusercontent.com",
     // androidClientId:
+
     //   "536279923900-23oa8bb9llrtm751fs9pkulbv1a8v4gp.apps.googleusercontent.com",
     webClientId:
       "625284880671-uhalllfk13r1f6br6hdf0v2g7gnnchn4.apps.googleusercontent.com",
@@ -47,7 +45,6 @@ export default function Login({ navigation }) {
   React.useEffect(() => {
     if (response?.type == "success") {
       setAccessToken(response.authentication.accessToken);
-      getUserData();
     }
   }, [response]);
 
@@ -74,9 +71,13 @@ export default function Login({ navigation }) {
       <Logo />
       <Button
         title={accessToken ? "Get User Data" : "Sign in with Google"}
-        onPress={() => {
-          promptAsync({ showInRecents: true });
-        }}
+        onPress={
+          accessToken
+            ? getUserData
+            : () => {
+                promptAsync({ showInRecents: true });
+              }
+        }
       />
       <Text>Terms and conditions</Text>
       {/* <StatusBar style="auto" /> */}
