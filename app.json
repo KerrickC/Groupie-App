@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Groupie-app",
-    "slug": "Groupie-app",
+    "slug": "groupie",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +28,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d5ded3ac-dd79-4860-aebd-3bc536af55ce"
+      }
+    },
+    "owner": "kerrickc"
   }
 }
