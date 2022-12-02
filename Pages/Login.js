@@ -22,9 +22,12 @@ WebBrowser.maybeCompleteAuthSession();
 //   }
 // }, [response]);
 
-export default function Login() {
+export default function Login({ navigation }) {
   const [accessToken, setAccessToken] = React.useState();
   const [userInfo, setUserInfo] = React.useState();
+
+  // //NAVIGATION
+  // const navigation = useNavigation();
 
   const dispatch = useDispatch();
 
@@ -44,6 +47,7 @@ export default function Login() {
   React.useEffect(() => {
     if (response?.type == "success") {
       setAccessToken(response.authentication.accessToken);
+      getUserData();
     }
   }, [response]);
 
@@ -57,25 +61,22 @@ export default function Login() {
     userInfoRes.json().then((data) => {
       setUserInfo(data);
       dispatch(set(data));
-      //   goToHomeScreen();
+      goToHomeScreen();
     });
   }
 
-  //NAVIGATION
-  const navigation = useNavigation();
+  const goToHomeScreen = () => {
+    navigation.navigate("Home");
+  };
 
   return (
     <View style={styles.container}>
       <Logo />
       <Button
         title={accessToken ? "Get User Data" : "Sign in with Google"}
-        onPress={
-          accessToken
-            ? getUserData
-            : () => {
-                promptAsync({ showInRecents: true });
-              }
-        }
+        onPress={() => {
+          promptAsync({ showInRecents: true });
+        }}
       />
       <Text>Terms and conditions</Text>
       {/* <StatusBar style="auto" /> */}
