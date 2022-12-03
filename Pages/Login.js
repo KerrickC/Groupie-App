@@ -55,10 +55,45 @@ export default function Login() {
 
     // console.log(await userInfoRes.text());
 
-    userInfoRes.json().then((data) => {
+    userInfoRes.json().then(async (data) => {
       setUserInfo(data);
-      dispatch(set(data));
-      goToHomeScreen();
+      console.log(data);
+
+      const userExists = await fetch(
+        `https://groupie-backend.herokuapp.com/getUserByEmail/${data.email}`
+      );
+
+      //if google user does not already exist, create one in DB
+      userExists.json().then(async (exists) => {
+        const userData = {
+          email: data.email,
+          name: data.name,
+          profileImage: data.picture,
+          ownedGroups: [],
+          memeberGroups: [],
+          verified: data.verified_email,
+        };
+        console.log(userData);
+        if (exists.code == 404) {
+          console.log("New user - creating...");
+          const addedUser = await fetch(
+            "https://groupie-backend.herokuapp.com/addUser",
+            {
+              method: "POST",
+              body: JSON.stringify(userData),
+              headers: {
+                "Content-type": "application/json; charset=UTF-8",
+              },
+            }
+          );
+
+          addedUser.json().then((data) => {
+            console.log(data);
+          });
+        }
+        dispatch(set(userData));
+        goToHomeScreen();
+      });
     });
   }
 
@@ -70,7 +105,7 @@ export default function Login() {
     <View style={styles.container}>
       <Logo />
       <Button
-        title={accessToken ? "Get User Data" : "Sign in with Google"}
+        title={accessToken ? "Logged In! Go to home" : "Sign in with Google"}
         onPress={
           accessToken
             ? getUserData

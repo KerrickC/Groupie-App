@@ -14,15 +14,17 @@ export default function Profile(props) {
 
   const renderProfileForm = () => {
     let userData = userInfo.payload;
+    console.log(userData);
     return (
       <View style={styles.container}>
         <Image
           style={styles.image}
           source={require("../assets/user-profile.png")}
         />
-        <Text style={styles.nameText}>Hello, {userData.given_name}</Text>
+        <Text style={styles.nameText}>Hello, {userData.name}</Text>
+        <Text style={styles.otherText}>{userData.email}</Text>
         <Text style={styles.otherText}>
-          Verified Account: {userData.verified_email ? "Yes" : "No"}
+          Verified Account: {userData.verified ? "Yes" : "No"}
         </Text>
       </View>
     );
@@ -49,11 +51,15 @@ const styles = StyleSheet.create({
   },
   nameText: {
     fontFamily: "Courier New",
-    fontSize: "30em",
+    fontSize: "25em",
     fontWeight: "bold",
   },
   otherText: {
     fontFamily: "Courier New",
     fontSize: "20em",
+  },
+  infoText: {
+    fontFamily: "Courier New",
+    fontSize: "10em",
   },
 });
