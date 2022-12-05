@@ -1,10 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, FlatList, Button} from "react-native";
+import { StyleSheet, Text, View, FlatList, Button, TouchableOpacity} from "react-native";
 import { TabRouter, useRoute } from "@react-navigation/native";
 import { useEffect, useState} from "react";
 import Login from "./Login";
 import React from "react";
 import { useSelector } from "react-redux";
+import styled from "styled-components";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { fontWeight, margin } from "@mui/system";
 
 export default function Home() {
   const route = useRoute();
@@ -12,6 +15,8 @@ export default function Home() {
   const [groups, setGroups] = React.useState();
 
   const userInfo = useSelector((state) => state.userInfo.value);
+
+  const myRnId = () => parseInt(Date.now() * Math.random());
 
   async function addUserToGroup(groupName) {
       const addUser = await fetch(
@@ -42,24 +47,35 @@ export default function Home() {
   const renderScreen = () => {
     if (route) {
       return (
-        <View style={styles.container}>
+        <SafeAreaView>
+        <View >
           <FlatList 
               data={groups}
               keyExtractor={(item, index) => { return item.groupID}}
               renderItem={({item, index}) => (
-                <View>
-                  <Text style={styles.title}>{item.groupName}</Text>
-                  {item.tags.map((tag, i) => (
-                    <Text key={i}>{tag}</Text>
-                  ))}
-                  <Button onPress={()=>{addUserToGroup(item.groupName)}} title="Join">
-
-                  </Button>
+                <View style={styles.container}>
+                  <Text style={styles.title}>{item.groupName} {'\n'}</Text>
+                  <View style={styles.tagContainter}>
+                  <View style={styles.row}>
+                    {item.tags.map((tag, i) => (
+                      <View style={styles.tag}>
+                        <Text key={myRnId} style={styles.textButton}>{tag}{'  '}</Text>
+                      </View>
+                    ))}
+                    </View>
+                    <Text style={styles.text}>Location:  {item.location}</Text>
+                    </View>
+                    <TouchableOpacity onPress={() => addUserToGroup(item.groupName)} 
+                      style={styles.button}>
+                        <Text style={styles.textButton}>Join</Text>
+                    </TouchableOpacity>
                   
+                 
                 </View>
               )}
           />
         </View>
+        </SafeAreaView>
       );
     } else {
       return <Login />;
@@ -72,8 +88,60 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#D3D3D3",
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    paddingTop: 5,
+    borderRadius:5
   },
+  row: {
+    flexDirection: "row",
+    alignItem: "center"
+  },
+  tagContainter: {
+    flexDirection:"column",
+    alignSelf: "flex-start",
+    justifyContent: "center",
+    marginLeft: 20,
+    
+  },
+  tag: {
+    backgroundColor: "#dcdcdc",
+    marginRight: 5,
+    padding: 3,
+    justifyContent: "center",
+    borderRadius: 10,
+    marginBottom: 5
+  },
+  text: {
+    fontSize: 15,
+    color: "#4b0082",
+  },
+  title: {
+    color: "#9370DB",
+    textAlign: "left",
+    paddingTop: 5,
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  button: {
+    backgroundColor: "#9370DB",
+    padding: 5,
+    borderRadius:7,
+    marginBottom: 20,
+    alignSelf: "flex-end",
+    marginRight: 20
+  },
+  textButton: {
+    color:"#FFFFFF",
+    marginLeft: 5,
+    marginRight: 5,
+    shadowColor: "#F0FFFF",
+    fontWeight: "bold",
+    fontSize: 15
+  }
 });
+
