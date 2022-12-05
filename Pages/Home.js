@@ -19,9 +19,10 @@ export default function Home() {
   const myRnId = () => parseInt(Date.now() * Math.random());
 
   async function addUserToGroup(groupName) {
+    console.log(userInfo.payload.email)
       const addUser = await fetch(
         `https://groupie-backend.herokuapp.com/addUserToGroup/${groupName}`, {
-          method: "POST",               
+          method: "PUT",               
           body: JSON.stringify({email: userInfo.payload.email}),               
           headers: {                 
             "Content-type": "application/json; charset=UTF-8",               
