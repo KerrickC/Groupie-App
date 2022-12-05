@@ -45,7 +45,6 @@ export default function Login() {
   React.useEffect(() => {
     if (response?.type == "success") {
       setAccessToken(response.authentication.accessToken);
-      fetchGroupData();
     }
   }, [response]);
 
