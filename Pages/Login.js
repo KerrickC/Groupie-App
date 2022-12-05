@@ -11,7 +11,7 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { set } from "../redux/userInfoSlice";
-
+import fetchGroupData, { groupList } from "../Components/fetchGroupData";
 WebBrowser.maybeCompleteAuthSession();
 
 // AuthSession.makeRedirectUri();
@@ -45,6 +45,7 @@ export default function Login() {
   React.useEffect(() => {
     if (response?.type == "success") {
       setAccessToken(response.authentication.accessToken);
+      fetchGroupData();
     }
   }, [response]);
 

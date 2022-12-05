@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from "react-native";
 import Login from "../Pages/Login";
 import Home from "../Pages/Home";
 import Profile from "../Pages/Profile";
+import Create from "../Pages/Create";
+import Search from "../Pages/Search"
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -29,7 +31,12 @@ export default function Main() {
 
               if (rn === "Home") {
                 iconName = focused ? "home" : "home-outline";
-              } else if (rn === "Profile") {
+              } else if (rn === "Create") {
+                iconName = focused ? "add-circle" : "add-circle-outline";
+              }else if (rn === "Search") {
+                iconName = focused ? "search" : "search-outline";
+              }
+              else if (rn === "Profile") {
                 iconName = focused ? "person" : "person-outline";
               }
               // else if (rn === settingsName) {
@@ -54,6 +61,8 @@ export default function Main() {
           })}
         >
           <Tab.Screen name={"Home"} component={Home} />
+          <Tab.Screen name={"Create"} component={Create} />
+          <Tab.Screen name={"Search"} component={Search} />
           <Tab.Screen name={"Profile"} component={Profile} />
         </Tab.Navigator>
       </NavigationContainer>
