@@ -1,26 +1,13 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Button } from "react-native";
 import Logo from "../Components/Logo";
-// import {
-//   GoogleSignin,
-//   statusCodes,
-// } from "@react-native-google-signin/google-signin";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+
 import { useSelector, useDispatch } from "react-redux";
 import { set } from "../redux/userInfoSlice";
-import fetchGroupData, { groupList } from "../Components/fetchGroupData";
+
 WebBrowser.maybeCompleteAuthSession();
-
-// AuthSession.makeRedirectUri();
-
-// React.useEffect(() => {
-//   if (response?.type === "success") {
-//     const { authentication } = response;
-//   }
-// }, [response]);
 
 export default function Login() {
   const [accessToken, setAccessToken] = React.useState();
@@ -28,15 +15,9 @@ export default function Login() {
 
   const dispatch = useDispatch();
 
-  // GOOGLE AUTH
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId:
       "625284880671-3bi3p9otqsc7fcn7f12bpmpbpoqi3k1f.apps.googleusercontent.com",
-    // iosClientId:
-    //   "536279923900-23oa8bb9llrtm751fs9pkulbv1a8v4gp.apps.googleusercontent.com",
-    // androidClientId:
-
-    //   "536279923900-23oa8bb9llrtm751fs9pkulbv1a8v4gp.apps.googleusercontent.com",
     webClientId:
       "625284880671-uhalllfk13r1f6br6hdf0v2g7gnnchn4.apps.googleusercontent.com",
     scopes: ["profile", "email"],
@@ -49,11 +30,11 @@ export default function Login() {
   }, [response]);
 
   async function getUserData() {
+
+    //after user authorises access to their Google account,this grabs their profile information
     let userInfoRes = await fetch("https://www.googleapis.com/userinfo/v2/me", {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
-
-    // console.log(await userInfoRes.text());
 
     userInfoRes.json().then(async (data) => {
       setUserInfo(data);
@@ -63,7 +44,7 @@ export default function Login() {
         `https://groupie-backend.herokuapp.com/getUserByEmail/${data.email}`
       );
 
-      //if google user does not already exist, create one in DB
+      //if the user's email is already registered, the user's profile is fetched from our database
       userExists.json().then(async (exists) => {
         const userData = {
           email: data.email,
@@ -74,6 +55,7 @@ export default function Login() {
           verified: data.verified_email,
         };
         console.log(userData);
+        //if their email is not registered in our database, a new user profile will be added to our database using their Google profile information
         if (exists.code == 404) {
           console.log("New user - creating...");
           const addedUser = await fetch(
@@ -91,12 +73,15 @@ export default function Login() {
             console.log(data);
           });
         }
+
+        //once a profile is identified or created, the user and their information are sent to the home screen
         dispatch(set(userData));
         goToHomeScreen();
       });
     });
   }
 
+  //function that navigates the user to the home meny
   const goToHomeScreen = () => {
     navigation.navigate("Home");
   };
@@ -105,6 +90,7 @@ export default function Login() {
     <View style={styles.container}>
       <Logo />
       <Button
+        //checks if the user has been authenticated, and either prompts them to the home screen or to provide authentication through Google
         title={accessToken ? "Logged In! Go to home" : "Sign in with Google"}
         onPress={
           accessToken
@@ -114,8 +100,6 @@ export default function Login() {
               }
         }
       />
-      <Text>Terms and conditions</Text>
-      {/* <StatusBar style="auto" /> */}
     </View>
   );
 }

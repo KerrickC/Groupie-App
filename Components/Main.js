@@ -4,7 +4,7 @@ import Login from "../Pages/Login";
 import Home from "../Pages/Home";
 import Profile from "../Pages/Profile";
 import Create from "../Pages/Create";
-import Search from "../Pages/Search"
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -23,27 +23,20 @@ export default function Main() {
     <Provider store={store}>
       <NavigationContainer>
         <Tab.Navigator
-          initialRouteName={"Home"}
+          initialRouteName={"Featured"}
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
               let rn = route.name;
-
-              if (rn === "Home") {
+              //sets up the bottom tab navigation
+              if (rn === "Featured") {
                 iconName = focused ? "home" : "home-outline";
               } else if (rn === "Create") {
                 iconName = focused ? "add-circle" : "add-circle-outline";
-              }else if (rn === "Search") {
-                iconName = focused ? "search" : "search-outline";
               }
               else if (rn === "Profile") {
                 iconName = focused ? "person" : "person-outline";
               }
-              // else if (rn === settingsName) {
-              //   iconName = focused ? "settings" : "settings-outline";
-              // }
-
-              // You can return any component that you like here!
               return <Ionicons name={iconName} size={size} color={color} />;
             },
             tabBarActiveTintColor: "tomato",
@@ -60,14 +53,14 @@ export default function Main() {
             ],
           })}
         >
-          <Tab.Screen name={"Home"} component={Home} />
+          <Tab.Screen name={"Featured"} component={Home} />
           <Tab.Screen name={"Create"} component={Create} />
-          <Tab.Screen name={"Search"} component={Search} />
           <Tab.Screen name={"Profile"} component={Profile} />
         </Tab.Navigator>
       </NavigationContainer>
     </Provider>
   ) : (
+    //initially directs the user to the login screen if they are not authenticated
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator

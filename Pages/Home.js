@@ -1,18 +1,13 @@
-import { StatusBar } from "expo-status-bar";
+
 import { StyleSheet, Text, View, Button, TouchableOpacity, FlatList } from "react-native";
-import { TabRouter, useRoute } from "@react-navigation/native";
-import { useEffect, useReducer, useState } from "react";
+import {useRoute } from "@react-navigation/native";
+import { useEffect} from "react";
 import Login from "./Login";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { set } from "../redux/userInfoSlice";
-import userInfoSlice from "../redux/userInfoSlice";
-import fetchGroupData, { groupList } from "../Components/fetchGroupData";
-import Styles from "../Components/Styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
-
   const route = useRoute();
 
   const [groups, setGroups] = React.useState();
@@ -21,10 +16,12 @@ export default function Home() {
 
   const myRnId = () => parseInt(Date.now() * Math.random());
 
+  //when a user presses join on a group, it will add the user's information to a group's member array
   async function addUserToGroup(groupName) {
+    console.log(userInfo.payload.email)
       const addUser = await fetch(
         `https://groupie-backend.herokuapp.com/addUserToGroup/${groupName}`, {
-          method: "POST",               
+          method: "PUT",               
           body: JSON.stringify({email: userInfo.payload.email}),               
           headers: {                 
             "Content-type": "application/json; charset=UTF-8",               
@@ -34,11 +31,13 @@ export default function Home() {
       addUser.json().then((data)=>{console.log(data)})
   }
   useEffect(() => {
+    //obtains the groups to be displayed from our database
     async function fetchData() {
       const groups = await fetch(
         "https://groupie-backend.herokuapp.com/getAllGroups"
       );
       groups.json().then((data) => {
+        //sets the groups that will be displayed
         console.log(data);
         setGroups(data.data);
       });
@@ -46,6 +45,7 @@ export default function Home() {
     fetchData();
   }, []);
   const renderScreen = () => {
+    //displays the groups on our database to the user
     if (route) {
       return (
         <SafeAreaView>
@@ -70,9 +70,8 @@ export default function Home() {
                       style={styles.button}>
                         <Text style={styles.textButton}>Join</Text>
                     </TouchableOpacity>
-                  
-                 
                 </View>
+                //the touchable opacity above is where a user taps to join a group
               )}
           />
         </View>

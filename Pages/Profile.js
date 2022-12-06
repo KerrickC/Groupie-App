@@ -1,4 +1,4 @@
-import { StatusBar } from "expo-status-bar";
+
 import { StyleSheet, Text, View, Image } from "react-native";
 import { useEffect, useState } from "react";
 import React from "react";
@@ -13,6 +13,7 @@ export default function Profile(props) {
   }, []);
 
   const renderProfileForm = () => {
+    //obtains userData and displays information
     let userData = userInfo.payload;
     console.log(userData);
     return (
@@ -23,9 +24,7 @@ export default function Profile(props) {
         />
         <Text style={styles.nameText}>Hello, {userData.name}</Text>
         <Text style={styles.otherText}>{userData.email}</Text>
-        <Text style={styles.otherText}>
-          Verified Account: {userData.verified ? "Yes" : "No"}
-        </Text>
+
       </View>
     );
   };

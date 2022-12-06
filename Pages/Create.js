@@ -1,27 +1,22 @@
-import { StatusBar } from "expo-status-bar";
+
 import { StyleSheet, Text, View,TextInput, Button } from "react-native";
 import { TabRouter, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import Login from "./Login";
 import React from "react";
-import fetchGroupData, { groupList } from "../Components/fetchGroupData"
-import Styles from "../Components/Styles";
+
 import { useSelector, useDispatch } from "react-redux";
 export default function Create() {
   const route = useRoute();
-  const [userData, setUserData] = React.useState();
   const [gName, nRequest] = useState('');
   const [gTag, tRequest] = useState('');
   const [gTag2, tRequest2] = useState('');
   const [gLocation, lRequest] = useState('');
   const userInfo = useSelector((state) => state.userInfo.value);
-  useEffect(() => {
-    
-    fetchGroupData();
-  }, []);
+
 
   const createGroup = async () => {
-
+    //grabs variables from the text input bars and initializes a new group
     var newGroup=
     {
      "groupName": gName,
@@ -32,8 +27,8 @@ export default function Create() {
     "members": []
     };
 
-    console.log(userInfo.payload.name)
     
+    //attempts to add the new group
     const newGrp = await fetch("https://groupie-backend.herokuapp.com/addGroup", {
       method: "POST",
       body: JSON.stringify(newGroup),
@@ -41,14 +36,16 @@ export default function Create() {
         "Content-type": "application/json; charset=UTF-8",
       },
     })
-
+    // if the group does not share the same title as a previous one, then the group will be added
     newGrp.json().then(data => {
-      console.log(data);
-      if(data.status == 201) {
-        alert("group successfully created")
+      if(data.code == "201") {
+        alert("Group successfully created!")
 
-      }else{
+      }
+      //if it is a duplicate or does not have all of the required information, then it throws an error
+      else{
         alert(`${data.error}`)
+
 
       }
     })
@@ -63,22 +60,24 @@ export default function Create() {
     
     if (route) {
 
+
       return (
-        
-        <View style={Styles.container}>
+        //provides the layout of the textInput fields
+        <View style={styles.container}>
           <TextInput value = {gName} onChangeText={(gName) => nRequest(gName)}style= {{backgroundColor: 'gray',marginTop: 20,width: 200,height:30}}/>
-            <Text style={Styles.nameText}>Group name</Text>
+            <Text style={styles.nameText}>Group name</Text>
             <TextInput value = {gTag} onChangeText={(gTag) => tRequest(gTag)}style= {{backgroundColor: 'gray',marginTop: 20,width: 200,height:30}}/>
-            <Text style={Styles.nameText}>Apply primary tag</Text>
+            <Text style={styles.nameText}>Apply primary tag</Text>
             <TextInput value = {gTag2} onChangeText={(gTag2) => tRequest2(gTag2)}style= {{backgroundColor: 'gray',marginTop: 20,width: 200,height:30}}/>
-            <Text style={Styles.nameText}>Apply additional tag</Text>
+            <Text style={styles.nameText}>Apply additional tag</Text>
             <TextInput value = {gLocation} onChangeText={(gLocation) => lRequest(gLocation)}style= {{backgroundColor: 'gray',marginTop: 20,width: 200,height:30}}/>
-            <Text style={Styles.nameText}>Location</Text>  
-          <Text style={Styles.title}>{userData.given_name}</Text>
+            <Text style={styles.nameText}>Location</Text>  
+          <Text style={styles.title}>{userData.given_name}</Text>
           
           <Button
            title = {"create group!"}
             color="#841584"
+            //when the button is pressed, it calls createGroup and attempts to create a new group
             onPress={createGroup}
               
             
@@ -94,15 +93,11 @@ export default function Create() {
   return renderScreen();
 }
 
-/*after kerrick done
-
-var newGroup=
-{
-  "_id": [gName],
-  "tags": [history, maath],
-  "owner": [userData.given_name],
-  "location": [mooon]
-};
-
-
-*/
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#D3D3D3",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+})

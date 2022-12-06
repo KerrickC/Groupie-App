@@ -5,6 +5,7 @@ import React from "react";
 
 export default function App() {
   return (
+    //directs the app on how to run
     <Provider store={store}>
       <Main />
     </Provider>
