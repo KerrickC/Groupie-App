@@ -29,6 +29,7 @@ export default function Home() {
         }
       );
       addUser.json().then((data)=>{console.log(data)})
+      alert("Group sucessfully joined!")
   }
   useEffect(() => {
     //obtains the groups to be displayed from our database
